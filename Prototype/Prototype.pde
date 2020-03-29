@@ -12,6 +12,9 @@ SoundFile thunderstorm;
 SoundFile whitenoise;
 Audio audio = new Audio();
 
+// count joints
+int jointCount = 0;
+
 void setup() {
   size(1920, 1080, P3D);
   background(0);
@@ -27,12 +30,12 @@ void setup() {
 }
 
 void draw() {
-  // sound
-  //if ((mouseX == 0 || mouseY == 0) || (mouseX == width-1 || mouseY == height-1)) {
-  //  audio.whitenoise();
-  //} else {
-  //  audio.thunder();
-  //}
+  
+  // boundary
+  rectMode(CENTER);
+  stroke(0);
+  fill(255);
+  rect(width/2, height/2, width/3, height);
   
   // kinect
   image(Kinect.getColorImage(), 0, 0, width, height);
@@ -52,11 +55,8 @@ void draw() {
     }
   }
   
-  // boundary
-  rectMode(CENTER);
-  stroke(0);
-  fill(255);
-  rect(width/2, height/2, width/3, height);
+
+  
 }
 
 //DRAW BODY
@@ -99,17 +99,32 @@ void drawBody(KJoint[] joints) {
   drawJoint(joints, KinectPV2.JointType_FootLeft);
   drawJoint(joints, KinectPV2.JointType_FootRight);
 
-  drawJoint(joints, KinectPV2.JointType_ThumbLeft);
-  drawJoint(joints, KinectPV2.JointType_ThumbRight);
-
   drawJoint(joints, KinectPV2.JointType_Head);
 }
 
 //draw joint
 void drawJoint(KJoint[] joints, int jointType) {
+  //if (joints[jointType].getX() < width/3) {
+  //  //jointCount++;
+  //  println(joints[jointType].getX());
+  //}
+  
+  //println("outside matrix", joints[jointType].getPosition().x, joints[jointType].getX());
+  
   pushMatrix();
   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
-  ellipse(0, 0, 50, 50);
+  //println("inside matrix", joints[jointType].getPosition().x, joints[jointType].getX());
+  
+
+  if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
+    //jointCount++;
+    println("OUTSIDE", width/3, 2*width/3, joints[jointType].getX());
+    audio.thunder();
+  } else {
+    audio.whitenoise();
+  }
+  
+  ellipse(0, 0, 25, 25);
   popMatrix();
 }
 
