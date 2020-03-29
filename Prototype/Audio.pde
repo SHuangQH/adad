@@ -2,7 +2,9 @@ class Audio {
   
   void whitenoise() {
     // turn off thunderstorm audio
-    if (thunderstorm.isPlaying()) thunderstorm.amp(0.1); 
+    float amplitude = (5.0-(float)jointCount)/10.0;
+    println("amplitude", amplitude);
+    if (thunderstorm.isPlaying()) thunderstorm.amp(amplitude); 
     
     // start white noise audio
     if (!noise.isPlaying()) {
