@@ -1,17 +1,25 @@
 class Audio {
   
   void whitenoise() {
-    if (thunderstorm.isPlaying()) thunderstorm.pause(); 
-    if (!whitenoise.isPlaying()) {
-      whitenoise.amp(0.5);
-      whitenoise.loop();
+    // turn off thunderstorm audio
+    if (thunderstorm.isPlaying()) thunderstorm.amp(0.1); 
+    
+    // start white noise audio
+    if (!noise.isPlaying()) {
+      println("Now Playing: whitenoise");
+      noise.amp(0.5);
+      noise.play();
     }
   }
   
   void thunder() {
-    if (whitenoise.isPlaying()) whitenoise.pause();
+    // turn off white noise audio
+    if (noise.isPlaying()) noise.stop();
+    
+    // play thunderstorm audio
+    thunderstorm.amp(1);
     if (!thunderstorm.isPlaying()) {
-      thunderstorm.amp(1);
+      println("Now Playing: thunderstorm");
       thunderstorm.loop();
     }
   }

@@ -8,6 +8,7 @@ KinectPV2 Kinect = new KinectPV2(this);
 // import Sound File
 import processing.sound.*;
 
+WhiteNoise noise;
 SoundFile thunderstorm;
 SoundFile whitenoise;
 Audio audio = new Audio();
@@ -27,14 +28,16 @@ void setup() {
   // set up sound files
   thunderstorm = new SoundFile(this, "thunderstorm.aiff");
   whitenoise = new SoundFile(this, "whitenoise.aiff");
+  noise = new WhiteNoise(this);
 }
 
 void draw() {
+  jointCount = 0;
   
-  // boundary
+  // boundary to represent the cloud or bed
   rectMode(CENTER);
   stroke(0);
-  fill(255);
+  strokeWeight(10);
   rect(width/2, height/2, width/3, height);
   
   // kinect
@@ -55,7 +58,7 @@ void draw() {
     }
   }
   
-
+  println(jointCount);
   
 }
 
@@ -104,24 +107,18 @@ void drawBody(KJoint[] joints) {
 
 //draw joint
 void drawJoint(KJoint[] joints, int jointType) {
-  //if (joints[jointType].getX() < width/3) {
-  //  //jointCount++;
-  //  println(joints[jointType].getX());
-  //}
-  
-  //println("outside matrix", joints[jointType].getPosition().x, joints[jointType].getX());
   
   pushMatrix();
   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
-  //println("inside matrix", joints[jointType].getPosition().x, joints[jointType].getX());
-  
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
-    //jointCount++;
-    println("OUTSIDE", width/3, 2*width/3, joints[jointType].getX());
-    audio.thunder();
+    //println("OUTSIDE", width/3, 2*width/3, joints[jointType].getX());
+    audio.thunder(); // play thunder audio if no one is on the cloud
   } else {
-    audio.whitenoise();
+    //println("INSIDE");
+    jointCount++;
+    
+    audio.whitenoise(); // play white noise audio if someone is on the cloud
   }
   
   ellipse(0, 0, 25, 25);
