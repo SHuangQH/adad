@@ -1,19 +1,40 @@
 // ADAD3400 Assessment 2
 
+// import Kinect
 import KinectPV2.KJoint;
 import KinectPV2.*;
 KinectPV2 Kinect = new KinectPV2(this);
+
+// import Sound File
+import processing.sound.*;
+
+SoundFile thunderstorm;
+SoundFile whitenoise;
+Audio audio = new Audio();
 
 void setup() {
   size(1920, 1080, P3D);
   background(0);
   
+  // set up kinect
   Kinect.enableSkeletonColorMap(true);
   Kinect.enableColorImg(true);
   Kinect.init();
+  
+  // set up sound files
+  thunderstorm = new SoundFile(this, "thunderstorm.aiff");
+  whitenoise = new SoundFile(this, "whitenoise.aiff");
 }
 
 void draw() {
+  // sound
+  //if ((mouseX == 0 || mouseY == 0) || (mouseX == width-1 || mouseY == height-1)) {
+  //  audio.whitenoise();
+  //} else {
+  //  audio.thunder();
+  //}
+  
+  // kinect
   image(Kinect.getColorImage(), 0, 0, width, height);
   
   ArrayList<KSkeleton> skeletonArray =  Kinect.getSkeletonColorMap();
