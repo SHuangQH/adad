@@ -8,19 +8,18 @@ Bolt bolt;
 void setup() {
   size(600, 600);
   background(0);
-  bolt = new Bolt(); 
 }
 
 void draw() {
   background(0); // removes the previous lightning strike from screen 
   frameRate(6); // slows it down
-  
-  noStroke();
-  fill(0, 24);
-  rect(0, 0, width, height);
-  
+
+  //noStroke();
+  //fill(0, 24);
+  //rect(0, 0, width, height);
+
   // decide when to make a lightning strike
   //if (random(100) < 10) {  or maybe could milliseconds?
-    
+  bolt.strike();
   //}
 }

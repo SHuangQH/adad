@@ -1,6 +1,20 @@
 class Bolt {
-  Bolt() {
+  PVector p1, p2, p3;
+  float lineWidth, theta, min, max;
+  
+  Bolt(PVector p, float t, float minn, float maxx, float w) {
+    p1.x = p.x;
+    p2.x = p.x;
+    p3.x = p.x;
     
+    p1.y = p.y;
+    p2.y = p.y;
+    p3.y = p.y;
+    
+    theta = t;
+    min = minn;
+    max = maxx;
+    lineWidth = w;
   }
   
   void strike() {
@@ -65,18 +79,18 @@ class Bolt {
     }
   }
 
-  void fork(float chance) {
-    chance = 0.01;
-    if (random(0,1) < chance) {
-      float newTheta = theta;
-      newTheta += randomSign()*random(minDTheta, maxDTheta);
-      if(theta>maxTheta)
-        theta = maxTheta;
-      if(theta<-maxTheta)
-        theta = -maxTheta;
-  //        nForks++;
-      (new lightningBolt(x2, y2, lineWidth, newTheta, straightJumpMin, straightJumpMax,boltColor)).draw();
-      //it draws the whole limb before continuing.
-    }
-  }
+  //void fork(float chance) {
+  //  chance = 0.01;
+  //  if (random(0,1) < chance) {
+  //    float newTheta = theta;
+  //    newTheta += randomSign()*random(minDTheta, maxDTheta);
+  //    if(theta>maxTheta)
+  //      theta = maxTheta;
+  //    if(theta<-maxTheta)
+  //      theta = -maxTheta;
+  ////        nForks++;
+  //    (new lightningBolt(x2, y2, lineWidth, newTheta, straightJumpMin, straightJumpMax,boltColor)).draw();
+  //    //it draws the whole limb before continuing.
+  //  }
+  //}
 }
