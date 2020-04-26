@@ -58,8 +58,6 @@ void draw() {
     }
   }
   
-  println(jointCount);
-  
 }
 
 //DRAW BODY
