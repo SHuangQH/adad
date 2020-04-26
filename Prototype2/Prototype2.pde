@@ -1,6 +1,7 @@
 // ADAD3400 Assessment 3
 
-color bg;
+// use this to change the background colour
+color bg = 0;
 
 // import Kinect
 import KinectPV2.KJoint;
@@ -39,8 +40,9 @@ void draw() {
   
   // boundary to represent the cloud or bed
   rectMode(CENTER);
-  stroke(0);
+  stroke(255);
   strokeWeight(10);
+  fill(bg); 
   rect(width/2, height/2, width/3, height);
   
   ArrayList<KSkeleton> skeletonArray =  Kinect.getSkeletonColorMap();
