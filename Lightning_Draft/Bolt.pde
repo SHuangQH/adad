@@ -1,20 +1,60 @@
 class Bolt {
   PVector p1, p2, p3;
-  float lineWidth, theta, min, max;
+  float lineWidth, lineWidth2, theta, min, max, jump;
   
   Bolt(PVector p, float t, float minn, float maxx, float w) {
-    p1.x = p.x;
-    p2.x = p.x;
-    p3.x = p.x;
-    
-    p1.y = p.y;
-    p2.y = p.y;
-    p3.y = p.y;
+    p1 = new PVector(p.x, p.y);
+    p2 = new PVector(p.x, p.y);
+    p3 = new PVector(p.x, p.y);
     
     theta = t;
     min = minn;
     max = maxx;
     lineWidth = w;
+    lineWidth2 = w;
+    
+    jump = random(min, max);
+  }
+  
+  void draw() {
+    while (p3.y < height && (p3.x > 0 && p3.x < width)) {
+      stroke(255);
+      strokeWeight(1);
+      
+      theta += randomSign()*random(minDTheta, maxDTheta);
+      if (theta > maxTheta) {
+        theta = maxTheta;
+      }
+      
+      if (theta < -maxTheta) {
+        theta = -maxTheta;
+      }
+      
+      jump = random(min, max);
+      p3.set(p2.x - jump*cos(theta - HALF_PI), p2.y - jump*cos(theta - HALF_PI));
+      //p3.x = p2.x - jump*cos(theta - HALF_PI);
+      //p3.y = p2.y - jump*sin(theta - HALF_PI);
+      
+      lineWidth = map(p3.y, height, p1.y, 1, lineWidth2);
+      if (lineWidth < 0) {
+        lineWidth = 0;
+      }
+      
+      stroke(255);
+      strokeWeight(lineWidth);
+      line(p2.x, p2.y, p3.x, p3.y);
+      p2.x = p3.x;
+      p2.y = p3.y;
+      
+      if (random(0,1) < childGenOdds) {
+        float newTheta = theta;
+        newTheta += randomSign()*random(minDTheta, maxDTheta);
+        if (theta > maxTheta) theta = maxTheta;
+        if (theta < -maxTheta) theta = -maxTheta;
+        Bolt newBolt = new Bolt(p3,lineWidth, newTheta, min, max);
+        newBolt.draw();
+      }
+    }
   }
   
   void strike() {

@@ -1,11 +1,5 @@
 // ADAD3400 Assessment 3
 
-// use this to change the background colour
-color bg = 0;
-
-// position
-boolean inside;
-
 // import Kinect
 import KinectPV2.KJoint;
 import KinectPV2.*;
@@ -22,9 +16,11 @@ Audio audio = new Audio();
 // count joints
 int jointCount = 0;
 
+// use this to change the background colour
+color bg = 0;
+
 void setup() {
   size(1920, 1080, P3D);
-  inside = false;
   
   // set up kinect
   Kinect.enableSkeletonColorMap(true);
@@ -38,19 +34,8 @@ void setup() {
 }
 
 void draw() {
-  //if (jointCount == 0) {
-  //   bg = 0;
-  //} else {
-  //  println("  oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-  //  if (bg > 0 && bg < 256) {
-  //    bg += bgTransition;
-  //    println("CHANGING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", bg);
-  //  }
-  //}
-  
   background(bg);
   
-  inside = false;
   jointCount = 0;
   
   // boundary to represent the cloud or bed
@@ -60,6 +45,7 @@ void draw() {
   noFill();
   rect(width/2, height/2, width/3, height);
   
+  // kinect 
   ArrayList<KSkeleton> skeletonArray =  Kinect.getSkeletonColorMap();
 
   //individual JOINTS
@@ -127,6 +113,8 @@ void drawJoint(KJoint[] joints, int jointType) {
   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
+    
+    // background colour becomes darker
     if (bg > 0) {
       bg -= 1;
     }
@@ -135,6 +123,7 @@ void drawJoint(KJoint[] joints, int jointType) {
   } else {
     jointCount++;
     
+    // background colour becomes lighter
     if (bg < 255) {
       bg += 1;
     }
