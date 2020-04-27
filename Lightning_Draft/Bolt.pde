@@ -1,11 +1,22 @@
 class Bolt {
-  PVector p1, p2, p3;
+  //PVector p1, p2, p3;
+  float x0, x1, x2, y0, y1, y2;
   float lineWidth, lineWidth2, theta, min, max, jump;
+  color myColour;
   
-  Bolt(PVector p, float t, float minn, float maxx, float w) {
-    p1 = new PVector(p.x, p.y);
-    p2 = new PVector(p.x, p.y);
-    p3 = new PVector(p.x, p.y);
+  //Bolt(PVector p, float t, float minn, float maxx, float w) {
+    Bolt(float a1, float a2, float t, float minn, float maxx, float w, color c) {
+    //p1 = new PVector(p.x, p.y);
+    //p2 = new PVector(p.x, p.y);
+    //p3 = new PVector(p.x, p.y);
+    
+    x0 = a1;
+    x1 = a1;
+    x2 = a1;
+    
+    y0 = a2;
+    y1 = a2;
+    y2 = a2;
     
     theta = t;
     min = minn;
@@ -13,12 +24,14 @@ class Bolt {
     lineWidth = w;
     lineWidth2 = w;
     
+    myColour = c;
+    
     jump = random(min, max);
   }
   
   void draw() {
-    while (p3.y < height && (p3.x > 0 && p3.x < width)) {
-      stroke(255);
+    //while (p3.y < height && (p3.x > 0 && p3.x < width)) {
+      while (y2 < height && (x2 > 0 && x2 < width)) {
       strokeWeight(1);
       
       theta += randomSign()*random(minDTheta, maxDTheta);
@@ -31,106 +44,49 @@ class Bolt {
       }
       
       jump = random(min, max);
-      p3.set(p2.x - jump*cos(theta - HALF_PI), p2.y - jump*cos(theta - HALF_PI));
+      //p3.set(p2.x - jump*cos(theta - HALF_PI), p2.y - jump*sin(theta - HALF_PI));
+      //x3 = x2 - jump*cos(theta - HALF_PI);
+      //y3 = y2 - jump*sin(theta - HALF_PI);
       //p3.x = p2.x - jump*cos(theta - HALF_PI);
       //p3.y = p2.y - jump*sin(theta - HALF_PI);
+      //println(p3.x, p3.y);
+      x2 = x1-jump*cos(theta-HALF_PI);
+      y2 = y1-jump*sin(theta-HALF_PI);
       
-      lineWidth = map(p3.y, height, p1.y, 1, lineWidth2);
+      //lineWidth = map(p3.y, height, p1.y, 1, lineWidth2);
+      //lineWidth = map(y3, height, y1, 1, lineWidth2);
+      lineWidth = map(y2, height, y0, 1, lineWidth2);
       if (lineWidth < 0) {
         lineWidth = 0;
       }
       
-      stroke(255);
+      stroke(myColour);
       strokeWeight(lineWidth);
-      line(p2.x, p2.y, p3.x, p3.y);
-      p2.x = p3.x;
-      p2.y = p3.y;
+      //line(p2.x, p2.y, p3.x, p3.y);
+      //p2.set(p3.x, p3.y);
+      //line(x2, y2, x3, y3);
+      //x2 = x3;
+      //y2 = y3;
+      //p2.x = p3.x;
+      //p2.y = p3.y;
+      line(x1,y1,x2,y2);
+      x1=x2;
+      y1=y2;
       
       if (random(0,1) < childGenOdds) {
         float newTheta = theta;
         newTheta += randomSign()*random(minDTheta, maxDTheta);
         if (theta > maxTheta) theta = maxTheta;
         if (theta < -maxTheta) theta = -maxTheta;
-        Bolt newBolt = new Bolt(p3,lineWidth, newTheta, min, max);
-        newBolt.draw();
+        //Bolt newBolt = new Bolt(p3,lineWidth, newTheta, min, max);
+        //Bolt newBolt = new Bolt(x3, y3,lineWidth, newTheta, min, max, boltColour);
+        (new Bolt(x2, y2, lineWidth, newTheta, min, max, boltColour)).draw();
+
+        //newBolt.draw();
       }
+      
     }
+    
   }
   
-  void strike() {
-    // 1. check which area the lightning should appear
-      // can restrict it to a specific third
-      // or base it entirely on the position of a specific joint 
-      
-    // 2. draw the lightning bolt
-    PVector p1 = new PVector(random(width), 0);
-    PVector p2 = new PVector(random(width), height);
-    
-    points = randomPoints(p1.x, p1.y, p2.x, p2.y, 0.25);
-    points.add(p2);
-    
-    stroke(64, 46, 255, 32);
-    strokeWeight(16);
-    drawChaoticLine(points);
-    
-    stroke(64, 64, 255, 32);
-    strokeWeight(8);
-    drawChaoticLine(points);
-    
-    stroke(128, 128, 255, 32);
-    strokeWeight(4);
-    drawChaoticLine(points);
-    
-    stroke(255, 255, 255, 255);
-    strokeWeight(2);
-    drawChaoticLine(points);
-    
-    // 3. figure out if there should be a fork and whether and draw it 
-  }
-  
-  ArrayList<PVector> randomPoints(float x1, float y1, float x2, float y2, float chaos) {
-    ArrayList<PVector> ptlist = new ArrayList<PVector>();  
-    float d_x = x2-x1;
-    float d_y = y2-y1;
-    float mag = sqrt(d_x*d_x + d_y*d_y);
-    if (mag > 10) {
-      float ch = randomGaussian()*chaos/2.0;  // randomGaussian seems to give a better result but is a bit slower
-      //float ch = random(-chaos, chaos);
-      
-      // Take a random point on the line perpendicular to the given segment and 
-      // passing through the midpoint of the segment
-      float xc = ((x1+x2)/2) - d_y*ch;
-      float yc = ((y1+y2)/2) + d_x*ch;
-      ptlist.addAll(randomPoints(x1, y1, xc, yc, 0.25));
-      ptlist.addAll(randomPoints(xc, yc, x2, y2, 0.25));
-      return ptlist;
-    } else {
-      line(x1, y1, x2, y2);
-      ptlist.add(new PVector(x1, y1));
-      return ptlist;
-    }
-  }
-
-  void drawChaoticLine(ArrayList<PVector> points) {
-    for (int i=0; i<points.size()-1; i++) {
-      PVector p1 = points.get(i);
-      PVector p2 = points.get(i+1);
-      line(p1.x, p1.y, p2.x, p2.y);
-    }
-  }
-
-  //void fork(float chance) {
-  //  chance = 0.01;
-  //  if (random(0,1) < chance) {
-  //    float newTheta = theta;
-  //    newTheta += randomSign()*random(minDTheta, maxDTheta);
-  //    if(theta>maxTheta)
-  //      theta = maxTheta;
-  //    if(theta<-maxTheta)
-  //      theta = -maxTheta;
-  ////        nForks++;
-  //    (new lightningBolt(x2, y2, lineWidth, newTheta, straightJumpMin, straightJumpMax,boltColor)).draw();
-  //    //it draws the whole limb before continuing.
-  //  }
-  //}
 }
