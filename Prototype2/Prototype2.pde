@@ -3,6 +3,9 @@
 // use this to change the background colour
 color bg = 0;
 
+// position
+boolean inside;
+
 // import Kinect
 import KinectPV2.KJoint;
 import KinectPV2.*;
@@ -21,8 +24,7 @@ int jointCount = 0;
 
 void setup() {
   size(1920, 1080, P3D);
-  bg = 0;
-  background(bg);
+  inside = false;
   
   // set up kinect
   Kinect.enableSkeletonColorMap(true);
@@ -36,13 +38,26 @@ void setup() {
 }
 
 void draw() {
+  //if (jointCount == 0) {
+  //   bg = 0;
+  //} else {
+  //  println("  oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+  //  if (bg > 0 && bg < 256) {
+  //    bg += bgTransition;
+  //    println("CHANGING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", bg);
+  //  }
+  //}
+  
+  background(bg);
+  
+  inside = false;
   jointCount = 0;
   
   // boundary to represent the cloud or bed
   rectMode(CENTER);
   stroke(255);
   strokeWeight(10);
-  fill(bg); 
+  noFill();
   rect(width/2, height/2, width/3, height);
   
   ArrayList<KSkeleton> skeletonArray =  Kinect.getSkeletonColorMap();
@@ -112,15 +127,19 @@ void drawJoint(KJoint[] joints, int jointType) {
   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
-    //println("OUTSIDE", width/3, 2*width/3, joints[jointType].getX());
+    if (bg > 0) {
+      bg -= 1;
+    }
+    
     audio.thunder(); // play thunder audio if no one is on the cloud
   } else {
-    //println("INSIDE");
     jointCount++;
     
+    if (bg < 255) {
+      bg += 1;
+    }
+    
     audio.whitenoise(); // play white noise audio if someone is on the cloud
-    bg = 255;
-    background(bg);
   }
   
   ellipse(0, 0, 25, 25);
