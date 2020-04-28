@@ -1,23 +1,54 @@
 // ADAD3400 Assessment 3
 
-// import Kinect
+/* Lightning code is inspired by: 
+     Attribute: "Lightning Storm" by Esteban Hufstedler
+     http://www.openprocessing.org/sketch/2924 
+     Licensed under Creative Commons Attribution
+*/
+
+// KINECT
 import KinectPV2.KJoint;
 import KinectPV2.*;
+
 KinectPV2 Kinect = new KinectPV2(this);
 
-// import Sound File
+// SOUND
 import processing.sound.*;
 
 WhiteNoise noise;
 SoundFile thunderstorm;
 SoundFile whitenoise;
+
 Audio audio = new Audio();
 
 // count joints
 int jointCount = 0;
 
-// use this to change the background colour
-color bg = 0;
+// LIGHTNING
+PVector pos;
+
+// bolt properties
+float maxDTheta = PI/10;
+float minDTheta = PI/20;
+float maxTheta = PI/2;
+float childGenOdds = .01; // creating forks in a bolt
+float minBoltWidth = 3;
+float maxBoltWidth = 10;
+float minJumpLength = 1;
+float maxJumpLength = 20;
+
+// colour
+color boltColour = color(360, 360, 360); // default set to white
+color skyColour = color(0, 0, 0, 30); // default to slightly transparent black
+
+// timing
+boolean fading = true; 
+float maxTimeBetweenStrikes = 2000; // milliseconds
+float lastStrike = 0;
+float nextStrikeInNms = 0;
+
+Bolt bolt = new Bolt(random(0,width),0, random(minBoltWidth, maxBoltWidth), 0, minJumpLength, maxJumpLength, boltColour);
+
 
 void setup() {
   size(1920, 1080, P3D);
@@ -31,10 +62,34 @@ void setup() {
   thunderstorm = new SoundFile(this, "thunderstorm.aiff");
   whitenoise = new SoundFile(this, "whitenoise.aiff");
   noise = new WhiteNoise(this);
+  
+  colorMode(HSB, 100);
+  smooth();
+  noFill();
+  background(skyColour);
 }
 
 void draw() {
-  background(bg);
+  // check if it is time to strike another lightning bolt
+  if (millis()-lastStrike > nextStrikeInNms) { 
+    // reassign time values for next strike
+    lastStrike = millis();
+    nextStrikeInNms = random(0, maxTimeBetweenStrikes);
+    
+    // draw the bolt
+    //bolt = new Bolt(pos,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength);
+    bolt = new Bolt(random(0,width),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
+    bolt.draw();
+  } else {
+    // if the lightning bolt should fade away then overlay a filled rectangle on top 
+    if (fading) {
+      noStroke();
+      fill(skyColour);
+      rectMode(CORNER);
+      rect(0, 0, width, height);
+      noFill();
+    }
+  }
   
   jointCount = 0;
   
@@ -114,19 +169,19 @@ void drawJoint(KJoint[] joints, int jointType) {
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
     
-    // background colour becomes darker
-    if (bg > 0) {
-      bg -= 1;
-    }
+    //// background colour becomes darker
+    //if (bg > 0) {
+    //  bg -= 1;
+    //}
     
     audio.thunder(); // play thunder audio if no one is on the cloud
   } else {
     jointCount++;
     
-    // background colour becomes lighter
-    if (bg < 255) {
-      bg += 1;
-    }
+    //// background colour becomes lighter
+    //if (bg < 255) {
+    //  bg += 1;
+    //}
     
     audio.whitenoise(); // play white noise audio if someone is on the cloud
   }
@@ -142,4 +197,15 @@ void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   ellipse(0, 0, 25, 25);
   popMatrix();
   line(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ(), joints[jointType2].getX(), joints[jointType2].getY(), joints[jointType2].getZ());
+}
+
+// randomly chooses to return +1 or -1 
+int randomSign() {
+  float num = random(-1, 1);
+  
+  if (num == 0) {
+    return -1;
+  } else {
+    return (int)(num/abs(num));
+  }
 }
