@@ -38,8 +38,15 @@ float minJumpLength = 1;
 float maxJumpLength = 20;
 
 // colour
-color boltColour = color(360, 360, 360); // default set to white
-color skyColour = color(0, 0, 0, 30); // default to slightly transparent black
+color boltColour = color(255);
+
+//float h = 0;
+//float s = 0;
+//float b = 0;
+//float a = 50;
+color c;
+float alpha;
+//color skyColour = color(c, 50); // default to slightly transparent black
 
 // timing
 boolean fading = true; 
@@ -63,10 +70,12 @@ void setup() {
   whitenoise = new SoundFile(this, "whitenoise.aiff");
   noise = new WhiteNoise(this);
   
-  colorMode(HSB, 100);
+  colorMode(RGB, 100);
   smooth();
   noFill();
-  background(skyColour);
+  c = 0;
+  alpha = 50;
+  background(c, alpha);
 }
 
 void draw() {
@@ -83,8 +92,8 @@ void draw() {
   } else {
     // if the lightning bolt should fade away then overlay a filled rectangle on top 
     if (fading) {
-      noStroke();
-      fill(skyColour);
+      noStroke();   
+      fill(c, alpha);
       rectMode(CORNER);
       rect(0, 0, width, height);
       noFill();
@@ -169,19 +178,19 @@ void drawJoint(KJoint[] joints, int jointType) {
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
     
-    //// background colour becomes darker
-    //if (bg > 0) {
-    //  bg -= 1;
-    //}
+    if (c > 0) {
+      c--;
+      alpha = 50;
+    }
     
     audio.thunder(); // play thunder audio if no one is on the cloud
   } else {
     jointCount++;
     
-    //// background colour becomes lighter
-    //if (bg < 255) {
-    //  bg += 1;
-    //}
+    if (c < 100) {
+      c++;
+      alpha = 100;
+    }
     
     audio.whitenoise(); // play white noise audio if someone is on the cloud
   }
@@ -209,3 +218,7 @@ int randomSign() {
     return (int)(num/abs(num));
   }
 }
+
+//color changeBackgroundColour() {
+  
+//}
