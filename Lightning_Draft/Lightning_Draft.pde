@@ -1,6 +1,6 @@
 // Inspired by: 
   // Attribute: "Lightning Storm" by Esteban Hufstedler
-  // http://www.openprocessing.org/sketch/2924
+  // http://www.openprocessing.org/sketch/2924 
   // Licensed under Creative Commons Attribution
 
 PVector pos;
@@ -31,11 +31,7 @@ void setup() {
   colorMode(HSB, 100);
   smooth();
   noFill();
-  
-  // colours
-  boltColour = color(0,0,99);
-  //skyColour = color(0,0,0,20); // a little transparent gives a stronger flashing light effect
-  background(0,0,0,20);
+  background(skyColour);
   
   // bolt
   pos = new PVector(random(0, 600), 0);
@@ -52,14 +48,13 @@ void draw() {
     
     // draw the bolt
     //bolt = new Bolt(pos,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength);
-        bolt = new Bolt(random(0,width),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
-
+    bolt = new Bolt(random(0,width),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
     bolt.draw();
   } else {
-    // if the lightning bolt should fade away, overlay a filled rectangle on top 
+    // if the lightning bolt should fade away then overlay a filled rectangle on top 
     if (fading) {
       noStroke();
-      fill(0,0,0,20);
+      fill(skyColour);
       rect(0, 0, width, height);
       noFill();
     }
