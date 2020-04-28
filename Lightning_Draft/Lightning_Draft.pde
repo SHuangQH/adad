@@ -16,8 +16,8 @@ float maxBoltWidth = 10;
 float minJumpLength = 1;
 float maxJumpLength = 10;
 
-color boltColour = color(0, 0, 99);
-color skyColour = color(0, 0, 0, 20);
+color boltColour = color(360, 360, 360);
+color skyColour = color(0, 0, 0, 30);
 
 boolean fading = true; 
 float maxTimeBetweenStrikes = 3000; // milliseconds

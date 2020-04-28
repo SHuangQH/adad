@@ -5,7 +5,7 @@ class Bolt {
   color myColour;
   
   //Bolt(PVector p, float t, float minn, float maxx, float w) {
-    Bolt(float a1, float a2, float t, float minn, float maxx, float w, color c) {
+    Bolt(float a1, float a2, float w, float t, float minn, float maxx, color c) {
     //p1 = new PVector(p.x, p.y);
     //p2 = new PVector(p.x, p.y);
     //p3 = new PVector(p.x, p.y);
@@ -80,8 +80,7 @@ class Bolt {
         if (theta < -maxTheta) theta = -maxTheta;
         //Bolt newBolt = new Bolt(p3,lineWidth, newTheta, min, max);
         //Bolt newBolt = new Bolt(x3, y3,lineWidth, newTheta, min, max, boltColour);
-        (new Bolt(x2, y2, lineWidth, newTheta, min, max, boltColour)).draw();
-
+        (new Bolt(x2, y2, lineWidth, newTheta, min, max, boltColour)).draw();;
         //newBolt.draw();
       }
       
