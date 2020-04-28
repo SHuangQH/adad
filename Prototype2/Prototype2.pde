@@ -40,13 +40,8 @@ float maxJumpLength = 20;
 // colour
 color boltColour = color(255);
 
-//float h = 0;
-//float s = 0;
-//float b = 0;
-//float a = 50;
-color c;
+color skyColour;
 float alpha;
-//color skyColour = color(c, 50); // default to slightly transparent black
 
 // timing
 boolean fading = true; 
@@ -73,9 +68,9 @@ void setup() {
   colorMode(RGB, 100);
   smooth();
   noFill();
-  c = 0;
-  alpha = 50;
-  background(c, alpha);
+  skyColour = 0;
+  alpha = 75;
+  background(skyColour, alpha);
 }
 
 void draw() {
@@ -90,10 +85,11 @@ void draw() {
     bolt = new Bolt(random(0,width),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
     bolt.draw();
   } else {
+    
     // if the lightning bolt should fade away then overlay a filled rectangle on top 
     if (fading) {
       noStroke();   
-      fill(c, alpha);
+      fill(skyColour, alpha);
       rectMode(CORNER);
       rect(0, 0, width, height);
       noFill();
@@ -178,8 +174,9 @@ void drawJoint(KJoint[] joints, int jointType) {
 
   if ((joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) || (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3)) {
     
-    if (c > 0) {
-      c--;
+    // change background colour to black
+    if (skyColour > 0) {
+      skyColour--;
       alpha = 50;
     }
     
@@ -187,8 +184,9 @@ void drawJoint(KJoint[] joints, int jointType) {
   } else {
     jointCount++;
     
-    if (c < 100) {
-      c++;
+    // change background colour to white
+    if (skyColour < 100) {
+      skyColour++;
       alpha = 100;
     }
     
