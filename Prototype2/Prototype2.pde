@@ -69,7 +69,7 @@ void setup() {
   smooth();
   noFill();
   skyColour = 0;
-  alpha = 30;
+  alpha = 10;
   background(skyColour, alpha);
 }
 
@@ -190,9 +190,8 @@ void drawJoint(KJoint[] joints, int jointType) {
     
   } else {
     jointCount++;
-    println("joint count: ", jointCount);
     
-    // change background colour to white
+    // change background colour to white only when the body is fully inside the boundary
     if (skyColour < 100 && jointCount > 3) {
       skyColour++;
       alpha = 100;
@@ -201,7 +200,7 @@ void drawJoint(KJoint[] joints, int jointType) {
     audio.whitenoise(); // play white noise audio if someone is on the cloud
   }
   
-  ellipse(0, 0, 25, 25);
+  ellipse(0, 0, 20, 20);
   popMatrix();
 }
 
@@ -209,7 +208,7 @@ void drawJoint(KJoint[] joints, int jointType) {
 void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   pushMatrix();
   translate(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ());
-  ellipse(0, 0, 25, 25);
+  ellipse(0, 0, 20, 20);
   popMatrix();
   line(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ(), joints[jointType2].getX(), joints[jointType2].getY(), joints[jointType2].getZ());
 }
