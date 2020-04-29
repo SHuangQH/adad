@@ -25,7 +25,7 @@ Audio audio = new Audio();
 int jointCount = 0;
 
 // LIGHTNING
-PVector pos;
+PVector pos = new PVector();
 
 // bolt properties
 float maxDTheta = PI/10;
@@ -69,7 +69,7 @@ void setup() {
   smooth();
   noFill();
   skyColour = 0;
-  alpha = 75;
+  alpha = 30;
   background(skyColour, alpha);
 }
 
@@ -81,8 +81,8 @@ void draw() {
     nextStrikeInNms = random(0, maxTimeBetweenStrikes);
     
     // draw the bolt
-    //bolt = new Bolt(pos,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength);
-    bolt = new Bolt(random(0,width/3),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
+    pos.set(0, width);
+    bolt = new Bolt(random(pos.x, pos.y),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
     bolt.draw();
   } else {
     
@@ -181,11 +181,19 @@ void drawJoint(KJoint[] joints, int jointType) {
     }
     
     audio.thunder(); // play thunder audio if no one is on the cloud
+    
+    if (joints[jointType].getX() > 0 && joints[jointType].getX() < width/3) {
+      pos.set(0, width/3);
+    } else if (joints[jointType].getX() < width && joints[jointType].getX() > 2*width/3) {
+      pos.set(2*width/3, 0);
+    }
+    
   } else {
     jointCount++;
+    println("joint count: ", jointCount);
     
     // change background colour to white
-    if (skyColour < 100) {
+    if (skyColour < 100 && jointCount > 3) {
       skyColour++;
       alpha = 100;
     }
