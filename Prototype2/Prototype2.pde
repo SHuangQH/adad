@@ -82,7 +82,7 @@ void draw() {
     
     // draw the bolt
     //bolt = new Bolt(pos,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength);
-    bolt = new Bolt(random(0,width),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
+    bolt = new Bolt(random(0,width/3),0,random(minBoltWidth,maxBoltWidth),0,minJumpLength,maxJumpLength, boltColour);
     bolt.draw();
   } else {
     
@@ -216,7 +216,3 @@ int randomSign() {
     return (int)(num/abs(num));
   }
 }
-
-//color changeBackgroundColour() {
-  
-//}
