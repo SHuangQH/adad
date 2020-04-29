@@ -69,7 +69,7 @@ void setup() {
   smooth();
   noFill();
   skyColour = 0;
-  alpha = 10;
+  alpha = 30;
   background(skyColour, alpha);
 }
 
